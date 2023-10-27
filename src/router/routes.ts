@@ -1,29 +1,91 @@
-import express from 'express'
+
+import express, { Request, Response } from "express";
+import { products, Product } from "./products";
 const inicial = express.Router()
 
 inicial.get('/', (_, res) => {
     res.send('The sedulous hyena ate the antelope!');
   });
   
-  const lista=[
-    {nombre:"PLaca Madre",
-    modelo:"B500",
-    precio:110,
-    pais_de_origen:"China"
-  },
+// Obtener todos los productos
+inicial.get("/productos", (_: Request, res: Response) => {
+  res.json(products);
+});
 
-  {nombre:"Placa de video",
-  modelo:"1660",
-  precio:1000,
-  pais_de_origen:"China"
+// Obtener productos cuyo precio sea mayor a 100
+inicial.get("/productoss/precio_alto", (_: Request, res: Response) => {
+  const precio_alto = products.filter((product) => product.precio > 100);
+  res.json(precio_alto);
+});
+
+// Modificar un producto existente o manejar el caso cuando no existe
+inicial.put("/productos/:modelo", (req: Request, res: Response) => {
+  const modelo = req.params.modelo;
+  const actualizarProducto: Product = req.body;
+  const index = products.findIndex((product) => product.modelo === modelo);
+
+  if (index !== -1) {
+    products[index] = actualizarProducto;
+    res.json(products[index]);
+  } else {
+    res.status(404).json({ message: "Producto no encontrado" });
+  }
+});
+
+// Eliminar un producto por su modelo o manejar el caso cuando no existe
+inicial.get("/productos/eliminar/:modelo", (req: Request, res: Response) => {
+const modelo = req.params.model;
+const filtrarProductos = products.filter((product) => product.modelo !== modelo);
+
+if (filtrarProductos.length < products.length) {
+  // Al menos un producto se eliminó
+  products.length = 0;  // Borra todos los elementos del array original
+  products.push(...filtrarProductos );  // Añade los elementos filtrados al array original
+  res.json({ message: "Producto eliminado" });
+} else {
+  res.status(404).json({ message: "Producto no encontrado" });
 }
+});
 
-];  
-inicial.get('/home', (_, res) => {
-  const preciosaltos = lista.filter((lista) => lista.precio > 100);
+// Obtener un producto por su país de origen
+inicial.get("/products/pais/:pais", (req: Request, res: Response) => {
+  const pais = req.params.pais;
+  const product = products.find((p) => p.pais === pais);
+  if (product) {
+    res.json(product);
+  } else {
+    res.status(404).json({ message: "Producto no encontrado" });
+  }
+});
 
-    res.send(preciosaltos);
-  });
+// Obtener un producto por su precio
+inicial.get("/productos/precio/:precio", (req: Request, res: Response) => {
+  const precio = parseInt(req.params.precio);
+  const product = products.find((p) => p.precio === precio);
+  if (product) {
+    res.json(product);
+  } else {
+    res.status(404).json({ message: "Producto no encontrado" });
+  }
+});
+
+// Crear un nuevo producto si tiene las mismas claves que los productos restantes
+inicial.post("/productos", (req: Request, res: Response) => {
+  const nuevoProducto: Product = req.body;
+  const mismaskeys = products.every(
+    (product) => Object.keys(product).sort().toString() === Object.keys(nuevoProducto).sort().toString()
+  );
+
+  if (mismaskeys) {
+    products.push(nuevoProducto);
+    res.json(nuevoProducto);
+  } else {
+    res.status(400).json({ message: "El nuevo producto debe tener las mismas claves que los productos existentes" });
+  }
+});
+
+
+
 
 
 export default inicial
