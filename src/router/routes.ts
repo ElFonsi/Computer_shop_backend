@@ -2,6 +2,7 @@
 import express, { Request, Response } from "express";
 import { products, Product } from "./products";
 const inicial = express.Router()
+inicial.use(express.json());
 
 inicial.get('/', (_, res) => {
     res.send('The sedulous hyena ate the antelope!');
@@ -33,18 +34,16 @@ inicial.put("/productos/:modelo", (req: Request, res: Response) => {
 });
 
 // Eliminar un producto por su modelo o manejar el caso cuando no existe
-inicial.get("/productos/eliminar/:modelo", (req: Request, res: Response) => {
-const modelo = req.params.model;
-const filtrarProductos = products.filter((product) => product.modelo !== modelo);
+inicial.delete("/productos/eliminar/:modelo", (req: Request, res: Response) => {
+  const modelo = req.params.modelo;
+  const index = products.findIndex((product) => product.modelo === modelo);
 
-if (filtrarProductos.length < products.length) {
-  // Al menos un producto se eliminó
-  products.length = 0;  // Borra todos los elementos del array original
-  products.push(...filtrarProductos );  // Añade los elementos filtrados al array original
-  res.json({ message: "Producto eliminado" });
-} else {
-  res.status(404).json({ message: "Producto no encontrado" });
-}
+  if (index !== -1) {
+    products.splice(index, 1);
+    res.json({ message: "Producto eliminado" });
+  } else {
+    res.status(404).json({ message: "Producto no encontrado" });
+  }
 });
 
 // Obtener un producto por su país de origen
@@ -70,7 +69,8 @@ inicial.get("/productos/precio/:precio", (req: Request, res: Response) => {
 });
 
 // Crear un nuevo producto si tiene las mismas claves que los productos restantes
-inicial.post("/productos", (req: Request, res: Response) => {
+
+inicial.post("/productos/agregar", (req: Request, res: Response) => {
   const nuevoProducto: Product = req.body;
   const mismaskeys = products.every(
     (product) => Object.keys(product).sort().toString() === Object.keys(nuevoProducto).sort().toString()
@@ -83,9 +83,6 @@ inicial.post("/productos", (req: Request, res: Response) => {
     res.status(400).json({ message: "El nuevo producto debe tener las mismas claves que los productos existentes" });
   }
 });
-
-
-
 
 
 export default inicial
