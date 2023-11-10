@@ -1,3 +1,19 @@
+import {Entity, Column, PrimaryGeneratedColumn} from "typeorm"
+
+
+@Entity()
+export class Photo{
+    @PrimaryGeneratedColumn()
+    id!: number 
+    @Column()
+    modelo!:string
+    @Column()
+    pais!: string  
+    @Column()
+    precio!: number
+
+}
+
 
 export interface Product {
     modelo: string;
@@ -12,3 +28,4 @@ export interface Product {
     { modelo: "Producto3", pais: "País3", precio: 200 },
 
   ];
+
