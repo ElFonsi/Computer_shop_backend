@@ -1,89 +1,38 @@
 
-import express, { Request, Response } from "express";
-import { products, Product } from "./products";
+import express from "express";
+import { addProduct, llamar_productos } from "../Controllers/controller";
 const inicial = express.Router()
 inicial.use(express.json());
 
 inicial.get('/', (_, res) => {
-    res.send('The sedulous hyena ate the antelope!');
+    res.send('The sedulous hyena at tehe antelope!');
   });
-  
-// Obtener todos los productos
-inicial.get("/productos", (_: Request, res: Response) => {
-  res.json(products);
-});
 
+// Obtener todos los productos
+inicial.get("/productos", llamar_productos)
+
+inicial.post('/productos/añadirProducto', addProduct)
+  
+/*
 // Obtener productos cuyo precio sea mayor a 100
-inicial.get("/productoss/precio_alto", (_: Request, res: Response) => {
-  const precio_alto = products.filter((product) => product.precio > 100);
-  res.json(precio_alto);
-});
+inicial.get("/productos/precio_alto", productos_mas100);
 
 // Modificar un producto existente o manejar el caso cuando no existe
-inicial.put("/productos/:modelo", (req: Request, res: Response) => {
-  const modelo = req.params.modelo;
-  const actualizarProducto: Product = req.body;
-  const index = products.findIndex((product) => product.modelo === modelo);
-
-  if (index !== -1) {
-    products[index] = actualizarProducto;
-    res.json(products[index]);
-  } else {
-    res.status(404).json({ message: "Producto no encontrado" });
-  }
-});
+inicial.put("/productos/:modelo", modificar_producto);
 
 // Eliminar un producto por su modelo o manejar el caso cuando no existe
-inicial.delete("/productos/eliminar/:modelo", (req: Request, res: Response) => {
-  const modelo = req.params.modelo;
-  const index = products.findIndex((product) => product.modelo === modelo);
-
-  if (index !== -1) {
-    products.splice(index, 1);
-    res.json({ message: "Producto eliminado" });
-  } else {
-    res.status(404).json({ message: "Producto no encontrado" });
-  }
-});
+inicial.delete("/productos/eliminar/:modelo", elim_producto);
 
 // Obtener un producto por su país de origen
-inicial.get("/products/pais/:pais", (req: Request, res: Response) => {
-  const pais = req.params.pais;
-  const product = products.find((p) => p.pais === pais);
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404).json({ message: "Producto no encontrado" });
-  }
-});
+inicial.get("/productos/pais/:pais", producto_por_pais);
 
 // Obtener un producto por su precio
-inicial.get("/productos/precio/:precio", (req: Request, res: Response) => {
-  const precio = parseInt(req.params.precio);
-  const product = products.find((p) => p.precio === precio);
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404).json({ message: "Producto no encontrado" });
-  }
-});
+inicial.get("/productos/precio/:precio", productos_por_precio);
 
 // Crear un nuevo producto si tiene las mismas claves que los productos restantes
 
-inicial.post("/productos/agregar", (req: Request, res: Response) => {
-  const nuevoProducto: Product = req.body;
-  const mismaskeys = products.every(
-    (product) => Object.keys(product).sort().toString() === Object.keys(nuevoProducto).sort().toString()
-  );
-
-  if (mismaskeys) {
-    products.push(nuevoProducto);
-    res.json(nuevoProducto);
-  } else {
-    res.status(400).json({ message: "El nuevo producto debe tener las mismas claves que los productos existentes" });
-  }
-});
-
+inicial.post("/productos/agregar", crear_por_clase);
+*/
 
 
 

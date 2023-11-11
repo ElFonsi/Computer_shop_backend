@@ -1,8 +1,7 @@
 import express from 'express';
 import inicial from './router/routes'
 import "reflect-metadata"
-import {DataSource} from "typeorm"
-import {Photo} from "./router/products"
+import { AppDataSource } from './db';
 
 const app = express();
 const port = 8080;
@@ -13,17 +12,6 @@ app.listen(port,()=>{
     console.log(port);
 });
 
-export const AppDataSource= new DataSource({
-    type: "postgres",
-    host:"localhost",
-    port:8080,
-    username:"test",
-    password:"test",
-    database:"test",
-    synchronize:true,
-    logging:true,
-    entities:[Photo]
-})
 
 AppDataSource.initialize()
     .then(()=>{
