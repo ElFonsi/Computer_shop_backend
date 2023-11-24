@@ -1,6 +1,6 @@
 
 import express from "express";
-import { addProduct, llamar_productos } from "../Controllers/controller";
+import { addProduct, llamar_productos, productos_mas100 } from "../Controllers/controller";
 const inicial = express.Router()
 inicial.use(express.json());
 
@@ -13,10 +13,10 @@ inicial.get("/productos", llamar_productos)
 
 inicial.post('/productos/añadirProducto', addProduct)
   
-/*
+
 // Obtener productos cuyo precio sea mayor a 100
 inicial.get("/productos/precio_alto", productos_mas100);
-
+/*
 // Modificar un producto existente o manejar el caso cuando no existe
 inicial.put("/productos/:modelo", modificar_producto);
 

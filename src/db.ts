@@ -3,11 +3,11 @@ import Producto from "./models/products"
 
 export const AppDataSource= new DataSource({
     type: "mysql",
-    host:"127.0.0.1",
-    port:8080,
+    host:"localhost",
+    port:3306,
     username:"root",
     password:"1234",
-    database:"Mybasededatos",
+    database:"backend",
     synchronize:true,
     logging:true,
     entities:[Producto],

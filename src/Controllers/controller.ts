@@ -21,11 +21,11 @@ export const addProduct = async (req: Request, res: Response) => {
 }
 
 
-/*export const productos_mas100 =(_: Request, res: Response) => {
+export const productos_mas100 =(_: Request, res: Response) => {
     const precio_alto = products.filter((product) => product.precio > 100);
     res.json(precio_alto);
 };
-
+/*
 export const modificar_producto =(req: Request, res: Response) => {
     const modelo = req.params.modelo;
   const actualizarProducto: Product = req.body;
