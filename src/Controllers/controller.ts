@@ -1,30 +1,64 @@
 import  { Request, Response } from "express";
-import { products, AppDataSource } from "../db";
+import {  AppDataSource } from "../db";
 import  Producto  from "../models/products";
 
-export const llamar_productos =(_: Request, res: Response) => {
-    res.json(products);
+export const llamar_productos = async(_: Request, res: Response) => {
+  try {
+    const productos = await AppDataSource.manager.find(Producto);
+    res.json(productos);
+} catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+}
 };
 
 export const addProduct = async (req: Request, res: Response) => {
-    console.log(req.body);
-    
-    const { pais, modelo, precio } = req.body;
-    const newProduct = new Producto();
-    newProduct.modelo = modelo;
-    newProduct.pais = pais;
-    newProduct.precio = precio;
+  const { nombre, descripcion, precio } = req.body;
 
-    await AppDataSource.manager.save(newProduct);
-
-    res.send('ProductAdded')
-}
-
-
-export const productos_mas100 =(_: Request, res: Response) => {
-    const precio_alto = products.filter((product) => product.precio > 100);
-    res.json(precio_alto);
+  try {
+      await Producto.agregarProducto(nombre, descripcion, precio, AppDataSource.manager);
+      res.send('Product added successfully');
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
 };
+
+export const eliminarProducto = async (req: Request, res: Response) => {
+  const { nombre } = req.params;
+
+  try {
+      const entityManager = AppDataSource.manager;
+      const product = await entityManager.findOne(Producto, { where: { nombre } });
+
+      if (!product) {
+          return res.status(404).send(`Product ${nombre} not found`);
+      }
+
+      await entityManager.remove(product);
+      return res.send(`Product ${nombre} deleted successfully`);
+  } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal Server Error');
+  }
+};
+
+// export const elim_producto =(req: Request, res: Response) => {
+//   const modelo = req.params.modelo;
+// const index = Producto.findIndex((product) => product.modelo === modelo);
+
+// if (index !== -1) {
+//   Producto.splice(index, 1);
+//   res.json({ message: "Producto eliminado" });
+// } else {
+//   res.status(404).json({ message: "Producto no encontrado" });
+// }
+// };
+
+// export const productos_mas100 =(_: Request, res: Response) => {
+//     const precio_alto = Producto.filter((Producto) => Producto.precio > 100);
+//     res.json(precio_alto);
+// };
 /*
 export const modificar_producto =(req: Request, res: Response) => {
     const modelo = req.params.modelo;
@@ -39,17 +73,6 @@ export const modificar_producto =(req: Request, res: Response) => {
   }
 };
 
-export const elim_producto =(req: Request, res: Response) => {
-    const modelo = req.params.modelo;
-  const index = products.findIndex((product) => product.modelo === modelo);
-
-  if (index !== -1) {
-    products.splice(index, 1);
-    res.json({ message: "Producto eliminado" });
-  } else {
-    res.status(404).json({ message: "Producto no encontrado" });
-  }
-};
 
 export const producto_por_pais =(req: Request, res: Response) => {
     const pais = req.params.pais;
