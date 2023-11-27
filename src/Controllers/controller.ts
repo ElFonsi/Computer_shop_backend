@@ -1,6 +1,8 @@
 import  { Request, Response } from "express";
 import {  AppDataSource } from "../db";
 import  Producto  from "../models/products";
+import  Usuario  from "../models/usuarios";
+import * as bcrypt from 'bcrypt'
 
 export const llamar_productos = async(_: Request, res: Response) => {
   try {
@@ -11,12 +13,21 @@ export const llamar_productos = async(_: Request, res: Response) => {
     res.status(500).send('Internal Server Error');
 }
 };
+export const llamar_usuarios = async(_: Request, res: Response) => {
+  try {
+    const usuarios = await AppDataSource.manager.find(Usuario);
+    res.json(usuarios);
+} catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+}
+};
 
 export const addProduct = async (req: Request, res: Response) => {
-  const { nombre, descripcion, precio } = req.body;
+  const { nombre, descripcion, precio, cantidad } = req.body;
 
   try {
-      await Producto.agregarProducto(nombre, descripcion, precio, AppDataSource.manager);
+      await Producto.agregarProducto(nombre, descripcion, precio, cantidad, AppDataSource.manager);
       res.send('Product added successfully');
   } catch (error) {
       console.error(error);
@@ -40,6 +51,52 @@ export const eliminarProducto = async (req: Request, res: Response) => {
   } catch (error) {
       console.error(error);
       return res.status(500).send('Internal Server Error');
+  }
+};
+
+
+export const register = async (req: Request, res: Response) => {
+  const { nombre, email, contraseña, confirmPassword } = req.body;
+
+  if (contraseña !== confirmPassword) {
+    return res.status(400).send('Las contraseñas no coinciden');
+  }
+
+  const usuarioRepository = AppDataSource.getRepository(Usuario);
+
+  try {
+    const hashedContraseña = await bcrypt.hash(contraseña, 10);
+    const nuevoUsuario = usuarioRepository.create({ nombre, email, contraseña: hashedContraseña });
+    await usuarioRepository.save(nuevoUsuario);
+    return res.status(201).send('Usuario registrado correctamente');
+  } catch (error) {
+    console.error('Error al registrar usuario:', error);
+    return res.status(500).send('Error interno del servidor');
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  const { email, contraseña } = req.body;
+
+  const usuarioRepository = AppDataSource.getRepository(Usuario);
+
+  try {
+    const usuario = await usuarioRepository.findOne({ where: { email } });
+
+    if (!usuario) {
+      return res.status(401).send('Usuario no encontrado');
+    }
+
+    const match = await bcrypt.compare(contraseña, usuario.contraseña);
+
+    if (match) {
+      return res.status(200).send('Inicio de sesión exitoso');
+    } else {
+      return res.status(401).send('Contraseña incorrecta');
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    return res.status(500).send('Error interno del servidor');
   }
 };
 

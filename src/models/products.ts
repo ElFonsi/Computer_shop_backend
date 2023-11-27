@@ -11,11 +11,14 @@ export default class Producto{
     descripcion!: string  
     @Column()
     precio!: number
+    @Column()
+    cantidad!: number
 
-    constructor(nombre:string, descripcion:string, precio:number){
+    constructor(nombre:string, descripcion:string, precio:number, cantidad:number){
         this.nombre= nombre;
         this.descripcion= descripcion;
         this.precio= precio;
+        this.cantidad=cantidad;
     }
 
 
@@ -26,13 +29,15 @@ export default class Producto{
         }
     }
 
-    static async agregarProducto(nombre: string, descripcion: string, precio: number, entityManager: EntityManager): Promise<void> {
-        const newProduct = new Producto(nombre, descripcion, precio);
+    static async agregarProducto(nombre: string, descripcion: string, precio: number,cantidad:number, entityManager: EntityManager): Promise<void> {
+        const newProduct = new Producto(nombre, descripcion, precio, cantidad);
         newProduct.nombre = nombre;
         newProduct.descripcion = descripcion;
         newProduct.precio = precio;
+        newProduct.cantidad= cantidad;
 
         await entityManager.save(newProduct);
     }
 }
+
 
