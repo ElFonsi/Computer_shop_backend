@@ -33,6 +33,7 @@ async function main() {
             AppDataSource.manager.save([producto1, producto2])
              console.log(product_exist)
         }
+
         if (usuario_exist.length == 0){
             const usuario1= new Usuario("Jero","jero@gmail.com","contraseña1")
             const usuario2 = new Usuario("Juan","juan@gmail.com","contraseña2")

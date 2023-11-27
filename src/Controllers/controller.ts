@@ -2,7 +2,10 @@ import  { Request, Response } from "express";
 import {  AppDataSource } from "../db";
 import  Producto  from "../models/products";
 import  Usuario  from "../models/usuarios";
+import Carrito from "../models/Carrito";
+// import { DeepPartial } from 'typeorm';
 import * as bcrypt from 'bcrypt'
+
 
 export const llamar_productos = async(_: Request, res: Response) => {
   try {
@@ -98,6 +101,24 @@ export const login = async (req: Request, res: Response) => {
     console.error('Error al iniciar sesión:', error);
     return res.status(500).send('Error interno del servidor');
   }
+};
+
+
+export const registerCart = async (req: Request, res: Response) => {
+  const { cartJson } = req.body;
+
+  try {
+
+      const cartEntity = new Carrito(cartJson);
+
+      await AppDataSource.manager.save(Carrito, cartEntity);
+
+      return res.status(201).json({ message: 'Carrito registrado exitosamente' });
+
+  } catch (err) {
+      console.error('Error al registrar el carrito:', err);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+  }  
 };
 
 // export const elim_producto =(req: Request, res: Response) => {

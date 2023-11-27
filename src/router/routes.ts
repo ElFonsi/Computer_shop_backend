@@ -1,6 +1,6 @@
 
 import express from "express";
-import { addProduct, llamar_productos, eliminarProducto, login, register, llamar_usuarios } from "../Controllers/controller";
+import { addProduct, llamar_productos, eliminarProducto, login, register, llamar_usuarios, registerCart } from "../Controllers/controller";
 const inicial = express.Router()
 inicial.use(express.json());
 
@@ -18,6 +18,9 @@ inicial.delete('/productos/:nombre', eliminarProducto);
 
 inicial.post('/login', login)
 inicial.post('/registrarse', register)
+
+inicial.post('/comprar', registerCart)
+
 // Obtener productos cuyo precio sea mayor a 100
 // inicial.get("/productos/precio_alto", productos_mas100);
 /*

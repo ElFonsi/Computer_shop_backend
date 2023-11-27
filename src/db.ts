@@ -1,6 +1,7 @@
 import {DataSource} from "typeorm"
 import Producto from "./models/products"
 import  Usuario  from "./models/usuarios";
+import Carrito from "./models/Carrito";
 
 export const AppDataSource= new DataSource({
     type: "mysql",
@@ -11,7 +12,7 @@ export const AppDataSource= new DataSource({
     database:"backend",
     synchronize:true,
     logging:true,
-    entities:[Producto, Usuario],
+    entities:[Producto, Usuario, Carrito],
     subscribers:[],
     migrations:[]
 })
