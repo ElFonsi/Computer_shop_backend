@@ -26,17 +26,17 @@ export const llamar_usuarios = async(_: Request, res: Response) => {
 }
 };
 
-export const addProduct = async (req: Request, res: Response) => {
-  const { nombre, descripcion, precio, cantidad } = req.body;
+// export const addProduct = async (req: Request, res: Response) => {
+//   const { nombre, descripcion, precio, cantidad } = req.body;
 
-  try {
-      await Producto.agregarProducto(nombre, descripcion, precio, cantidad, AppDataSource.manager);
-      res.send('Product added successfully');
-  } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-  }
-};
+//   try {
+//       await Producto.agregarProducto(nombre, descripcion, precio, cantidad, AppDataSource.manager);
+//       res.send('Product added successfully');
+//   } catch (error) {
+//       console.error(error);
+//       res.status(500).send('Internal Server Error');
+//   }
+// };
 
 export const eliminarProducto = async (req: Request, res: Response) => {
   const { nombre } = req.params;

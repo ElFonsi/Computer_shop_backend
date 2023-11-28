@@ -1,6 +1,6 @@
 
 import express from "express";
-import { addProduct, llamar_productos, eliminarProducto, login, register, llamar_usuarios, registerCart } from "../Controllers/controller";
+import {llamar_productos, eliminarProducto, login, register, llamar_usuarios, registerCart } from "../Controllers/controller";
 const inicial = express.Router()
 inicial.use(express.json());
 
@@ -9,10 +9,10 @@ inicial.get('/', (_, res) => {
   });
 
 // Obtener todos los productos
-inicial.get("/productos", llamar_productos, llamar_usuarios)
+inicial.get("/productos", llamar_productos)
 inicial.get("/usuarios", llamar_usuarios)
 
-inicial.post('/productos/añadirProducto', addProduct);
+// inicial.post('/productos/añadirProducto', addProduct);
 
 inicial.delete('/productos/:nombre', eliminarProducto);
 
