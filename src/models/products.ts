@@ -1,5 +1,4 @@
 import {Entity, Column, PrimaryGeneratedColumn, EntityManager} from "typeorm"
-// import Carrito from "./Carrito"
 
 @Entity()
 export default class Producto{

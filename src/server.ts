@@ -24,8 +24,8 @@ async function main() {
 
         const validation_product= AppDataSource.manager.getRepository(Producto)
         const product_exist= await validation_product.find()
-        const validation_usuario= AppDataSource.manager.getRepository(Usuario)
-        const usuario_exist= await validation_usuario.find()
+        ////////////////////////////////////////////////////////////////////////////
+        
 
         if (product_exist.length == 0){
             const producto1= new Producto("Notebook Lenovo 16","Thinkpad E16 I7-1255u | Ram 16gb | Ssd 512gb | Mx550 | W10", 1400, 1)
@@ -33,7 +33,11 @@ async function main() {
             AppDataSource.manager.save([producto1, producto2])
              console.log(product_exist)
         }
+        //////////////////////////////////////////////////////////////////////////////////////
 
+        const validation_usuario= AppDataSource.manager.getRepository(Usuario)
+        const usuario_exist= await validation_usuario.find()
+        
         if (usuario_exist.length == 0){
             const usuario1= new Usuario("Jero","jero@gmail.com","contraseña1")
             const usuario2 = new Usuario("Juan","juan@gmail.com","contraseña2")

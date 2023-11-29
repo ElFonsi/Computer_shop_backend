@@ -8,7 +8,6 @@ inicial.get('/', (_, res) => {
     res.send('The sedulous hyena at tehe antelope!');
   });
 
-// Obtener todos los productos
 inicial.get("/productos", llamar_productos)
 inicial.get("/usuarios", llamar_usuarios)
 

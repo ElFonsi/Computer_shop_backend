@@ -3,7 +3,6 @@ import {  AppDataSource } from "../db";
 import  Producto  from "../models/products";
 import  Usuario  from "../models/usuarios";
 import Carrito from "../models/Carrito";
-// import { DeepPartial } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 
 
@@ -57,9 +56,14 @@ export const eliminarProducto = async (req: Request, res: Response) => {
   }
 };
 
-
 export const register = async (req: Request, res: Response) => {
   const { nombre, email, contraseña, confirmPassword } = req.body;
+
+  // Validar el formato del correo electrónico
+  const isEmailValid = isValidEmail(email);
+  if (!isEmailValid) {
+    return res.status(400).send('Correo electrónico no válido');
+  }
 
   if (contraseña !== confirmPassword) {
     return res.status(400).send('Las contraseñas no coinciden');
@@ -77,6 +81,11 @@ export const register = async (req: Request, res: Response) => {
     return res.status(500).send('Error interno del servidor');
   }
 };
+
+function isValidEmail(email: string): boolean {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
 
 export const login = async (req: Request, res: Response) => {
   const { email, contraseña } = req.body;
